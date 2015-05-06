@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+
+{% block js %}
+{% endblock %}
+
+
+{% block main %}
+
+<div class="container">
+	<form action="{{ url_for('profile_add') }}" method="post">
+		first_name: {{ form.first_name }} <br/>
+		last_name: {{ form.last_name }} <br/>
+		image: {{ form.image }} <br/>
+		<input type="submit"/>
+	</form>
+</div>
+{% endblock %}

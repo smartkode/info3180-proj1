@@ -5,10 +5,22 @@ Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 
 This file creates your application.
 """
-
+import flask
 from app import app
 from flask import render_template, request, redirect, url_for
+from flask.ext.wtf import Form 
+from wtforms.fields import TextField, FileField
+from wtforms.validators import Required, Email
 
+from app import db
+from app.models import Profile
+
+#app.config['SECRET_KEY']='sjddjhdgjdshdghjsvdn'
+
+class ProfileForm(Form):
+    first_name = TextField('First Name', validators=[Required()])
+    last_name = TextField('Last Name', validators=[Required()])
+    image = FileField('Image', validators=[Required()])
 
 ###
 # Routing for your application.
@@ -19,6 +31,28 @@ def home():
     """Render website's home page."""
     return render_template('home.html')
 
+@app.route('/profile', methods=['POST', 'GET'])
+def profile_add():
+    form = ProfileForm()
+    # IF post
+    if request.method == 'POST':
+         first_name = request.form['first_name']
+         last_name = request.form['last_name']
+         newprofile = Profile(first_name,last_name)
+         db.session.add(newprofile)
+         db.session.commit()
+         return "{} {} this was a post".format(first_name, last_name)
+    
+    #write to db
+    return render_template('profile_add.html', form=form)
+
+@app.route('/profiles')
+def profile_list():
+    return "list all profiles"
+
+@app.route('/profile/<int:id>')
+def profile_view(id):
+    return "profile {}".format(id)        
 
 @app.route('/about/')
 def about():
