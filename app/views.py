@@ -48,11 +48,15 @@ def profile_add():
 
 @app.route('/profiles')
 def profile_list():
-    return "list all profiles"
+    # import pdb;pdb.set_trace()
+    profiles = Profile.query.all()
+    return render_template('profile_list.html', profiles=profiles)
 
 @app.route('/profile/<int:id>')
 def profile_view(id):
-    return "profile {}".format(id)        
+    profile = Profile.query.get(id)
+    # import pdb;pdb.set_trace()
+    return render_template('profile_view.html', profile=profile)        
 
 @app.route('/about/')
 def about():
